@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
-const lyricsRoutes = require('./routes/lyricsRoutes'); // Import the lyrics route
+const lyricsRoutes = require('./routes/lyricsRoutes'); 
 const { errorHandler } = require('./utils/errorHandler');
 
 dotenv.config();
