@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon server.js",
     "start:deploy": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,7 +18,8 @@
     "express": "^4.19.2",
     "genius-lyrics-api": "^3.2.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.5.2"
+    "mongoose": "^6.4.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
