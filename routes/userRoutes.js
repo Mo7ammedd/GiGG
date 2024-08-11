@@ -12,4 +12,6 @@ router.post('/upload-img', protect, upload.single('image'), uploadImage);
 router.get('/all', protect, getAllUsers); 
 router.get('/:id', protect, getUserById); 
 
+
+
 module.exports = router;
