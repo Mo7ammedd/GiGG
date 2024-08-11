@@ -1,60 +1,39 @@
 const User = require('../models/User');
 
-// Change password
-exports.changePassword = async (req, res) => {
-    const { oldPassword, newPassword } = req.body;
+// Update user information
+exports.updateMe = async (req, res) => {
+    const { oldPassword, newPassword, newEmail, newPhoneNumber } = req.body;
 
     try {
         const user = await User.findById(req.user._id);
 
-        if (user && (await user.matchPassword(oldPassword))) {
-            user.password = newPassword;
-            await user.save();
-
-            res.json({ message: 'Password updated successfully' });
-        } else {
-            res.status(401).json({ message: 'Incorrect old password' });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
-// Update email
-exports.updateUserEmail = async (req, res) => {
-    const { newEmail } = req.body;
+        // Update password if provided
+        if (oldPassword && newPassword) {
+            if (await user.matchPassword(oldPassword)) {
+                user.password = newPassword;
+            } else {
+                return res.status(401).json({ message: 'Incorrect old password' });
+            }
+        }
 
-    try {
-        const user = await User.findById(req.user._id);
-
-        if (user) {
+        // Update email if provided
+        if (newEmail) {
             user.email = newEmail;
-            await user.save();
-
-            res.json({ message: 'Email updated successfully' });
-        } else {
-            res.status(404).json({ message: 'User not found' });
         }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
-// Update phone number
-exports.updateUserPhone = async (req, res) => {
-    const { newPhoneNumber } = req.body;
-
-    try {
-        const user = await User.findById(req.user._id);
-
-        if (user) {
+        // Update phone number if provided
+        if (newPhoneNumber) {
             user.phoneNumber = newPhoneNumber;
-            await user.save();
-
-            res.json({ message: 'Phone number updated successfully' });
-        } else {
-            res.status(404).json({ message: 'User not found' });
         }
+
+        // Save updated user
+        await user.save();
+
+        res.json({ message: 'User information updated successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
