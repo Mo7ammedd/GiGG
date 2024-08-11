@@ -19,8 +19,9 @@ const UserSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
     },
-
-    
+    imageUrl: {  
+        type: String,
+    },
 }, { timestamps: true });
 
 // Hash the password before saving
