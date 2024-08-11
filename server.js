@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
-app.use("/api", uploadController);
+app.use("/api/upload", uploadController);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/lyrics", lyricsRoutes);
