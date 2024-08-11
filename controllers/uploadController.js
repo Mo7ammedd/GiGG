@@ -1,9 +1,6 @@
-const express = require("express");
-const router = express.Router();
-const upload = require("../middlewares/multer");
 const cloudinary = require("../utils/upload");
 
-router.post("/", upload.single("image"), (req, res) => {
+const uploadImage = (req, res) => {
   // Check if an image was uploaded
   if (!req.file) {
     return res.status(400).json({
@@ -25,6 +22,8 @@ router.post("/", upload.single("image"), (req, res) => {
       data: result,
     });
   });
-});
+};
 
-module.exports = router;
+module.exports = {
+  uploadImage,
+};
