@@ -1,11 +1,9 @@
 const express = require('express');
-const { changePassword, updateUserEmail, updateUserPhone } = require('../controllers/userController');
+const { updateMe } = require('../controllers/userController');
 const { protect } = require('../middlewares/authMiddleware');
 const router = express.Router();
 
-// Protected routes
-router.put('/change-password', protect, changePassword);
-router.put('/change-email', protect, updateUserEmail);
-router.put('/change-phone', protect, updateUserPhone);
+// Protected route for updating user information
+router.patch('/update-me', protect, updateMe);
 
 module.exports = router;
