@@ -1,18 +1,19 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors'); // Import the cors package
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const lyricsRoutes = require('./routes/lyricsRoutes'); 
 const { errorHandler } = require('./utils/errorHandler');
- 
+
 dotenv.config();
 
 connectDB();
 
-
-
 const app = express();
+
+app.use(cors()); 
 
 app.use(express.json());
 
