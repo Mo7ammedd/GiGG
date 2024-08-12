@@ -5,14 +5,12 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const lyricsRoutes = require('./routes/lyricsRoutes'); 
 const { errorHandler } = require('./utils/errorHandler');
-const cors = require('cors');
  
 dotenv.config();
 
 connectDB();
 
-app.use(cors());
-app.options ("*",cors());
+
 
 const app = express();
 
