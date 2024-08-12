@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const cloudinary = require("../utils/upload");
-
+const jwt = require("jsonwebtoken");
 // Change password
 exports.changePassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
@@ -118,25 +118,43 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+//getUserProfile
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password"); // Exclude the password field
 
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 // Update user information
+
 exports.updateMe = async (req, res) => {
-  const { oldPassword, newPassword, newEmail, newPhoneNumber } = req.body;
+  const { username, newEmail, newPhoneNumber } = req.body;
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
 
   try {
-    const user = await User.findById(req.user._id);
+    // Verify the token and extract the user ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // Update password if provided
-    if (oldPassword && newPassword) {
-      if (await user.matchPassword(oldPassword)) {
-        user.password = newPassword;
-      } else {
-        return res.status(401).json({ message: "Incorrect old password" });
-      }
+    //Update username if provided
+    if (username) {
+      user.username = req.body.username;
     }
 
     // Update email if provided
@@ -150,7 +168,7 @@ exports.updateMe = async (req, res) => {
     }
 
     await user.save();
-
+    // Return the updated user information
     res.json({
       message: "User information updated successfully",
       user: user,
