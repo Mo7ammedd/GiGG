@@ -2,29 +2,32 @@ const User = require('../models/User');
 const generateToken = require('../utils/tokenUtils');
 
 // Register a new user
+// Register a new user
 exports.registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
-
+    const { username, email, password, name } = req.body; // Include `name`
+  
     try {
-        const userExists = await User.findOne({ email });
-
-        if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
-
-        const user = await User.create({ username, email, password });
-
-        res.status(201).json({
-            _id: user._id,
-            username: user.username,
-            email: user.email,
-            token: generateToken(user._id),
-        });
+      const userExists = await User.findOne({ email });
+  
+      if (userExists) {
+        return res.status(400).json({ message: 'User already exists' });
+      }
+  
+      const user = await User.create({ username, email, password, name }); 
+  
+      res.status(201).json({
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        token: generateToken(user._id),
+      });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
-};
+  };
+  
 
+// Login user
 // Login user
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -37,6 +40,7 @@ exports.loginUser = async (req, res) => {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
+                name: user.name,
                 token: generateToken(user._id),
             });
         } else {

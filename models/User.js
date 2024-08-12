@@ -22,6 +22,10 @@ const UserSchema = new mongoose.Schema({
     imageUrl: {  
         type: String,
     },
+    name: {
+        type: String,
+        required: true,  
+    },
 }, { timestamps: true });
 
 // Hash the password before saving

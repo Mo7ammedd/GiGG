@@ -95,7 +95,10 @@ exports.uploadImage = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Image uploaded and saved successfully",
-      data: result,
+      data: {
+        imageUrl: user.imageUrl,
+        cloudinaryResult: result,
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -131,10 +134,17 @@ exports.getUserById = async (req, res) => {
 //getUserProfile
 exports.getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password"); // Exclude the password field
+    const user = await User.findById(req.user._id).select("-password");
 
     if (user) {
-      res.json(user);
+      res.json({
+        _id: user._id,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        imageUrl: user.imageUrl, 
+      });
     } else {
       res.status(404).json({ message: "User not found" });
     }
@@ -142,7 +152,6 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 // Update user information
 exports.updateMe = async (req, res) => {
   const { username, newEmail, newPhoneNumber } = req.body;
