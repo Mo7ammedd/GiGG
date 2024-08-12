@@ -17,10 +17,9 @@ const router = express.Router();
 router.put("/change-password", protect, changePassword);
 router.put("/change-email", protect, updateUserEmail);
 router.put("/change-phone", protect, updateUserPhone);
+router.get("/me", protect, getUserProfile);
 router.patch("/update-me", protect, updateMe);
 router.post("/upload-img", protect, upload.single("image"), uploadImage);
 router.get("/all", protect, getAllUsers);
 router.get("/:id", protect, getUserById);
-router.get("/me", protect, getUserProfile);
-
 module.exports = router;
