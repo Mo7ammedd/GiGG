@@ -1,5 +1,9 @@
 const User = require('../models/User');
 const jwt = require("jsonwebtoken");
+const { generateEmailHTML } = require('../utils/emailSender');
+const{ sendEmail}= require('../utils/emailSender'); // Adjust the path as necessary
+
+
 
 // Change password
 exports.changePassword = async (req, res) => {
@@ -22,23 +26,32 @@ exports.changePassword = async (req, res) => {
 };
 
 // Update email
+// Update email
 exports.updateUserEmail = async (req, res) => {
-    const { newEmail } = req.body;
+  const { newEmail } = req.body;
 
-    try {
-        const user = await User.findById(req.user._id);
+  try {
+    const user = await User.findById(req.user._id);
 
-        if (user) {
-            user.email = newEmail;
-            await user.save();
+    if (user) {
+      user.email = newEmail;
+      await user.save();
 
-            res.json({ message: 'Email updated successfully' });
-        } else {
-            res.status(404).json({ message: 'User not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+      // Send notification email
+      const html = generateEmailHTML(user.username, 'email', newEmail);
+      await sendEmail({
+        email: newEmail,
+        subject: "Email Update Notification",
+        html
+      });
+
+      res.json({ message: "Email updated successfully" });
+    } else {
+      res.status(404).json({ message: "User not found" });
     }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // Update phone number
