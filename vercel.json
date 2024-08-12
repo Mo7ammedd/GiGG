@@ -15,7 +15,7 @@
     "env": {
       "MONGO_URI": "mongodb+srv://medomostafa22255:B1EnmVzVdJvxi5ee@cluster0.nrsng.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
       "JWT_SECRET": "a5c0c6cfe47e7f89480b17f4357c26a791373c474f007a90569c0b3a083e4b1f5b47c5a92067d76855e3a6e73a1c0e35ae9bbfb7e85b9423b8d239e1fee87eb6",
-      "GENIUS_API_KEY": "ETZO_mIl1KzGo-X0BuQKgKF_rDgqkYWMyjgirLAeQdwWBHiZM9Z8BxDhVF_aYjGS",
+      "GENIUS_APi": "ETZO_mIl1KzGo-X0BuQKgKF_rDgqkYWMyjgirLAeQdwWBHiZM9Z8BxDhVF_aYjGS",
       "PORT": "3000",
       "EMAIL_USERNAME":"medo.mostafa22255@icloud.com",
       "EMAIL_PASSWORD":"rxwe-rqym-hqlr-usbv"

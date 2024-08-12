@@ -12,7 +12,7 @@ const getLyricsHandler = (req, res) => {
   const options = {
     title: title,
     artist: artist,
-    apiKey: process.env.GENIUS_API_KEY,
+    apiKey: process.env.GENIUS_APi,
     optimizeQuery: true,
   };
 

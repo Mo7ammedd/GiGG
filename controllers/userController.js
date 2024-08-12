@@ -187,6 +187,8 @@ exports.updateMe = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+//deleteUser
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -203,7 +205,7 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+//deleteAllUsers
 exports.deleteAllUsers = async (req, res) => {
   try {
     await User.deleteMany({});
