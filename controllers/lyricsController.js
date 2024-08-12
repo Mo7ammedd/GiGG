@@ -17,30 +17,30 @@ const getLyricsHandler = (req, res) => {
   };
 
   getLyrics(options)
-    .then((lyrics) => {
-      if (lyrics) {
-        const versesArray = lyrics.split("\n\n");
+  .then((lyrics) => {
+    console.log('Lyrics response:', lyrics); // Log the response
+    if (lyrics) {
+      const versesArray = lyrics.split("\n\n");
+      const response = {
+        song: options.title,
+        artist: options.artist,
+        verses: versesArray.map((verse, index) => {
+          return {
+            number: index + 1,
+            lyrics: verse,
+          };
+        }),
+      };
+      res.status(200).json(response);
+    } else {
+      res.status(404).json({ message: "Lyrics not found" });
+    }
+  })
+  .catch((error) => {
+    console.error('Error fetching lyrics:', error); // Log the error
+    res.status(500).json({ message: "Internal server error" });
+  });
 
-        const response = {
-          song: options.title,
-          artist: options.artist,
-          verses: versesArray.map((verse, index) => {
-            return {
-              number: index + 1,
-              lyrics: verse,
-            };
-          }),
-        };
-
-        res.status(200).json(response);
-      } else {
-        res.status(404).json({ message: "Lyrics not found" });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({ message: "Internal server error" });
-    });
 };
 
 module.exports = {

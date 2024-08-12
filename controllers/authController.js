@@ -4,7 +4,7 @@ const generateToken = require('../utils/tokenUtils');
 // Register a new user
 // Register a new user
 exports.registerUser = async (req, res) => {
-    const { username, email, password, name } = req.body; // Include `name`
+    const { username, email, password, name } = req.body; 
   
     try {
       const userExists = await User.findOne({ email });
