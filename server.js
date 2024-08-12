@@ -6,7 +6,6 @@ const userRoutes = require("./routes/userRoutes");
 const lyricsRoutes = require("./routes/lyricsRoutes");
 const { errorHandler } = require("./utils/errorHandler");
 
-
 dotenv.config();
 
 connectDB();

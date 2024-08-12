@@ -3,9 +3,6 @@ const path = require("path");
 
 // Set storage engine
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads"); // Ensure this path is correct and matches your directory
-  },
   filename: function (req, file, cb) {
     cb(null, `image-${Date.now()}${path.extname(file.originalname)}`);
   },
