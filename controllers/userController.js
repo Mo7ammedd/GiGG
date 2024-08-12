@@ -61,6 +61,7 @@ exports.updateUserPhone = async (req, res) => {
   }
 };
 
+
 // Upload profile image
 exports.uploadImage = async (req, res) => {
   if (!req.file) {
@@ -118,7 +119,20 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+//getUserProfile
+exports.getUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('-password'); // Exclude the password field
+  
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+  };
 // Update user information
 exports.updateMe = async (req, res) => {
     const { oldPassword, newPassword, newEmail, newPhoneNumber } = req.body;
