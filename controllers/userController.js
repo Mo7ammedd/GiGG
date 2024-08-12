@@ -97,3 +97,46 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// Update user information
+exports.updateMe = async (req, res) => {
+  const { username, newEmail, newPhoneNumber } = req.body;
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    //Update username if provided
+    if (username) {
+      user.username = req.body.username;
+    }
+
+    // Update email if provided
+    if (newEmail) {
+      user.email = newEmail;
+    }
+
+    // Update phone number if provided
+    if (newPhoneNumber) {
+      user.phoneNumber = newPhoneNumber;
+    }
+
+    await user.save();
+    // Return the updated user information
+    res.json({
+      message: "User information updated successfully",
+      user: user,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
