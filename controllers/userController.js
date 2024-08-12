@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const cloudinary = require("../utils/upload");
 const jwt = require("jsonwebtoken");
+const sendEmail = require("../utils/emailSender");
 // Change password
 exports.changePassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
@@ -31,6 +32,14 @@ exports.updateUserEmail = async (req, res) => {
     if (user) {
       user.email = newEmail;
       await user.save();
+
+      // Send notification email
+      const message = `Hi ${user.username}, your email has been updated successfully to ${newEmail}.`;
+      await sendEmail({
+        email: newEmail,
+        subject: "Email Update Notification",
+        message
+      });
 
       res.json({ message: "Email updated successfully" });
     } else {
