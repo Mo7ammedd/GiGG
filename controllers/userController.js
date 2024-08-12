@@ -23,7 +23,6 @@ exports.changePassword = async (req, res) => {
 };
 
 // Update email
-// Update email
 exports.updateUserEmail = async (req, res) => {
   const { newEmail } = req.body;
 
