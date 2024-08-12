@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const jwt = require("jsonwebtoken");
 
 // Change password
 exports.changePassword = async (req, res) => {
