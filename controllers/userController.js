@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const cloudinary = require("../utils/upload");
-const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/emailSender");
 // Change password
 exports.changePassword = async (req, res) => {
@@ -39,7 +38,7 @@ exports.updateUserEmail = async (req, res) => {
       await sendEmail({
         email: newEmail,
         subject: "Email Update Notification",
-        message
+        message,
       });
 
       res.json({ message: "Email updated successfully" });
@@ -146,7 +145,7 @@ exports.getUserProfile = async (req, res) => {
 // Update user information
 exports.updateMe = async (req, res) => {
   const { username, newEmail, newPhoneNumber } = req.body;
-  const userId = req.user._id; // Get userId from req.user
+  const userId = req.user._id;
 
   try {
     const user = await User.findById(userId);
@@ -180,4 +179,3 @@ exports.updateMe = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
