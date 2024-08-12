@@ -146,24 +146,18 @@ exports.getUserProfile = async (req, res) => {
 // Update user information
 exports.updateMe = async (req, res) => {
   const { username, newEmail, newPhoneNumber } = req.body;
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "No token provided" });
-  }
+  const userId = req.user._id; // Get userId from req.user
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
-
     const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    //Update username if provided
+
+    // Update username if provided
     if (username) {
-      user.username = req.body.username;
+      user.username = username;
     }
 
     // Update email if provided
@@ -186,3 +180,4 @@ exports.updateMe = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
