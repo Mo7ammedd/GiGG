@@ -22,7 +22,6 @@ exports.changePassword = async (req, res) => {
 };
 
 // Update email
-// Update email
 exports.updateUserEmail = async (req, res) => {
   const { newEmail } = req.body;
 
@@ -94,7 +93,10 @@ exports.uploadImage = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Image uploaded and saved successfully",
-      data: result,
+      data: {
+        imageUrl: user.imageUrl,
+        cloudinaryResult: result,
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -130,10 +132,17 @@ exports.getUserById = async (req, res) => {
 //getUserProfile
 exports.getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password"); // Exclude the password field
+    const user = await User.findById(req.user._id).select("-password");
 
     if (user) {
-      res.json(user);
+      res.json({
+        _id: user._id,
+        username: user.username,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        imageUrl: user.imageUrl,
+      });
     } else {
       res.status(404).json({ message: "User not found" });
     }
@@ -141,7 +150,6 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 // Update user information
 exports.updateMe = async (req, res) => {
   const { username, newEmail, newPhoneNumber } = req.body;
@@ -175,6 +183,31 @@ exports.updateMe = async (req, res) => {
       message: "User information updated successfully",
       user: user,
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "User deleted successfully",
+      userDeleted: user,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.deleteAllUsers = async (req, res) => {
+  try {
+    await User.deleteMany({});
+    res.json({ message: "All users deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
