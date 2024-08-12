@@ -132,8 +132,8 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-// Update user information
 
+// Update user information
 exports.updateMe = async (req, res) => {
   const { username, newEmail, newPhoneNumber } = req.body;
   const token = req.headers.authorization?.split(" ")[1];
@@ -143,7 +143,6 @@ exports.updateMe = async (req, res) => {
   }
 
   try {
-    // Verify the token and extract the user ID
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.id;
 
