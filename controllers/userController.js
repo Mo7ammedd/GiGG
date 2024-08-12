@@ -191,15 +191,15 @@ exports.updateMe = async (req, res) => {
 //deleteUser
 exports.deleteUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
 
-    if (!user) {
+    if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
     res.json({
       message: "User deleted successfully",
-      userDeleted: user,
+      userDeleted: deletedUser,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -208,8 +208,17 @@ exports.deleteUser = async (req, res) => {
 //deleteAllUsers
 exports.deleteAllUsers = async (req, res) => {
   try {
-    await User.deleteMany({});
-    res.json({ message: "All users deleted successfully" });
+    // Get all users before deleting them
+    const usersToDelete = await User.find({});
+
+    // Delete all users
+    const deletedUsers = await User.deleteMany({});
+
+    res.json({
+      message: "All users deleted successfully",
+      deletedUsers: usersToDelete,
+      deletedItemsCount: deletedUsers.deletedCount,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
