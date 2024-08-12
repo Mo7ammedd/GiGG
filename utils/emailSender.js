@@ -1,40 +1,29 @@
-const fs = require('fs');
-const path = require('path');
 const nodemailer = require('nodemailer');
-
-const generateEmailHTML = (username, changeType, newValue) => {
-    const templatePath = path.join(__dirname, '../utils/emailUpdate.html');
-    let template = fs.readFileSync(templatePath, 'utf8');
-
-    template = template.replace('{{username}}', username)
-                       .replace('{{changeType}}', changeType)
-                       .replace('{{newValue}}', newValue);
-
-    return template;
-};
 
 const sendEmail = async (options) => {
     const transporter = nodemailer.createTransport({
         host: 'smtp.mail.me.com',
         port: 587,
-        secure: false,
+        secure: false,  // Use true for port 465, false for other ports
         auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD
+            user: process.env.EMAIL_USERNAME,  // Your iCloud email
+            pass: process.env.EMAIL_PASSWORD   // Your iCloud app-specific password
         },
         tls: {
             rejectUnauthorized: false
         }
     });
+    
 
     const mailOptions = {
-        from: 'medo.mostafa22255@icloud.com',
+        from: 'medo.mostafa22255@icloud.com',  // Must match the iCloud account's email
         to: options.email,
         subject: options.subject,
-        html: options.html,
+        text: options.message,
     };
+    
 
     await transporter.sendMail(mailOptions);
 };
 
-module.exports = { generateEmailHTML, sendEmail };
+module.exports = sendEmail;
