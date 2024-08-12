@@ -10,7 +10,7 @@ router.put('/change-phone', protect, updateUserPhone);
 router.get("/all", protect, getAllUsers);
 router.get("/:id", protect, getUserById);
 router.get('/me', protect, getUserProfile);
-router.patch("/update-me", protect, updateMe);
+router.patch("/update-Me", protect, updateMe);
 
 
 module.exports = router;
