@@ -118,8 +118,52 @@ const searchSongByNameHandler = async (req, res) => {
   }
 };
 
+const getTopSongsInEgypt = async (accessToken) => {
+  try {
+    const response = await axios.get('https://api.spotify.com/v1/playlists/37i9dQZEVXbLn7RQmT5Xv2/tracks', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data.items.map(item => {
+      const track = item.track;
+      return {
+        song: track.name,
+        artist: track.artists.map(artist => artist.name).join(', '),
+        album: track.album.name,
+        preview_url: track.preview_url,
+        album_image: track.album.images[0]?.url,
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching top songs in Egypt:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+const getTopSongsInEgyptHandler = async (req, res) => {
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    const songs = await getTopSongsInEgypt(accessToken);
+
+    if (songs.length > 0) {
+      res.status(200).json(songs);
+    } else {
+      res.status(404).json({ message: 'No songs found' });
+    }
+  } catch (error) {
+    console.error('Error handling /top-songs-egypt request:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 module.exports = {
   getSpotifyAccessToken,
   getRandomSongsHandler,
   searchSongByNameHandler,
+  getTopSongsInEgyptHandler,
 };
