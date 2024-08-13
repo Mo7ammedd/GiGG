@@ -53,7 +53,36 @@ const getRandomSongs = async (accessToken, limit = 50) => {
   }
 };
 
+const searchSongByName = async (accessToken, songName) => {
+  try {
+    const response = await axios.get('https://api.spotify.com/v1/search', {
+      params: {
+        q: songName,
+        type: 'track',
+        limit: 10, // Adjust the limit as per your needs
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // Return the relevant data from the response
+    return response.data.tracks.items.map(track => ({
+      song: track.name,
+      artist: track.artists.map(artist => artist.name).join(', '),
+      album: track.album.name,
+      preview_url: track.preview_url,
+      album_image: track.album.images[0]?.url, // Include album artwork URL
+    }));
+  } catch (error) {
+    console.error('Error searching for song:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 module.exports = {
   getSpotifyAccessToken,
-  getRandomSongs
+  getRandomSongs,
+  searchSongByName, 
 };
