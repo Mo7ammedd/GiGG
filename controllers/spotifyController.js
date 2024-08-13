@@ -36,7 +36,6 @@ const getRandomSongs = async (accessToken, limit = 50) => {
     });
 
     const tracks = response.data.tracks.items;
-
     const shuffledTracks = tracks.sort(() => 0.5 - Math.random());
     const randomTracks = shuffledTracks.slice(0, limit);
 
@@ -59,7 +58,7 @@ const searchSongByName = async (accessToken, songName) => {
       params: {
         q: songName,
         type: 'track',
-        limit: 10, // Adjust the limit as per your needs
+        limit: 10,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -67,13 +66,12 @@ const searchSongByName = async (accessToken, songName) => {
       },
     });
 
-    // Return the relevant data from the response
     return response.data.tracks.items.map(track => ({
       song: track.name,
       artist: track.artists.map(artist => artist.name).join(', '),
       album: track.album.name,
       preview_url: track.preview_url,
-      album_image: track.album.images[0]?.url, // Include album artwork URL
+      album_image: track.album.images[0]?.url,
     }));
   } catch (error) {
     console.error('Error searching for song:', error.response?.data || error.message);
@@ -81,8 +79,47 @@ const searchSongByName = async (accessToken, songName) => {
   }
 };
 
+// Handlers for the routes
+const getRandomSongsHandler = async (req, res) => {
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    const songs = await getRandomSongs(accessToken, 50);
+
+    if (songs.length > 0) {
+      res.status(200).json(songs);
+    } else {
+      res.status(404).json({ message: 'No songs found' });
+    }
+  } catch (error) {
+    console.error('Error handling /random-songs request:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const searchSongByNameHandler = async (req, res) => {
+  const { name } = req.query;
+
+  if (!name) {
+    return res.status(400).json({ message: "Missing required parameter: name" });
+  }
+
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    const songs = await searchSongByName(accessToken, name);
+
+    if (songs.length > 0) {
+      res.status(200).json(songs);
+    } else {
+      res.status(404).json({ message: 'No songs found' });
+    }
+  } catch (error) {
+    console.error('Error handling /search-song request:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   getSpotifyAccessToken,
-  getRandomSongs,
-  searchSongByName, 
+  getRandomSongsHandler,
+  searchSongByNameHandler,
 };
