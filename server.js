@@ -6,6 +6,8 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const lyricsRoutes = require('./routes/lyricsRoutes'); 
 const { errorHandler } = require('./utils/errorHandler');
+const spotifyRoutes = require('./routes/spotifyRoutes');
+
 dotenv.config();
 
 connectDB();
@@ -20,7 +22,8 @@ app.options ("*",cors());
 // Use the routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api", lyricsRoutes); // This makes the route available at /api/lyrics and /api/search
+app.use("/api", lyricsRoutes); 
+app.use('/api', spotifyRoutes);
 
 app.use(errorHandler);
 
