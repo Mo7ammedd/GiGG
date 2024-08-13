@@ -192,22 +192,15 @@ exports.updateMe = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
     let changes = [];
-
-    // Update username if provided
     if (username) {
       user.username = username;
       changes.push(`username to ${username}`);
     }
-
-    // Update email if provided
     if (newEmail) {
       user.email = newEmail;
       changes.push(`email to ${newEmail}`);
     }
-
-    // Update phone number if provided
     if (newPhoneNumber) {
       user.phoneNumber = newPhoneNumber;
       changes.push(`phone number to ${newPhoneNumber}`);
@@ -253,12 +246,8 @@ exports.deleteUser = async (req, res) => {
 // Delete all users
 exports.deleteAllUsers = async (req, res) => {
   try {
-    // Get all users before deleting them
     const usersToDelete = await User.find({});
-
-    // Delete all users
     const deletedUsers = await User.deleteMany({});
-
     res.json({
       message: "All users deleted successfully",
       deletedUsers: usersToDelete,
