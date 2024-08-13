@@ -1,5 +1,13 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+
+const RatingSchema = new mongoose.Schema({
+    song: String,
+    artist: String,
+    album: String,
+    rating: Number,
+    album_image: String,
+    preview_url: String,
+}, { _id: false });
 
 const UserSchema = new mongoose.Schema({
     username: {
@@ -16,16 +24,13 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    phoneNumber: {
-        type: String,
-    },
-    imageUrl: {  
-        type: String,
-    },
+    phoneNumber: String,
+    imageUrl: String,
     name: {
         type: String,
-        required: true,  
+        required: true,
     },
+    ratings: [RatingSchema], 
 }, { timestamps: true });
 
 // Hash the password before saving
@@ -37,7 +42,6 @@ UserSchema.pre('save', async function (next) {
     next();
 });
 
-// Method to match password
 UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };

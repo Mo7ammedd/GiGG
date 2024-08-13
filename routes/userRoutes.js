@@ -25,5 +25,4 @@ router.get("/all", protect, getAllUsers);
 router.get("/:id", protect, getUserById);
 router.delete("/delete/:id", protect, deleteUser);
 router.delete("/delete-all", protect, deleteAllUsers);
-
 module.exports = router;

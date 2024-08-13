@@ -142,6 +142,7 @@ exports.getUserProfile = async (req, res) => {
         email: user.email,
         phoneNumber: user.phoneNumber,
         imageUrl: user.imageUrl,
+        ratings: user.ratings, 
       });
     } else {
       res.status(404).json({ message: "User not found" });
@@ -150,6 +151,7 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 // Update user information
 exports.updateMe = async (req, res) => {
   const { username, newEmail, newPhoneNumber } = req.body;
@@ -223,3 +225,6 @@ exports.deleteAllUsers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+
