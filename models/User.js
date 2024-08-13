@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const RatingSchema = new mongoose.Schema({
     song: String,

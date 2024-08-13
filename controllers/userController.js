@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const cloudinary = require("../utils/upload");
 const sendEmail = require("../utils/emailSender");
+
 // Change password
 exports.changePassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
@@ -12,6 +13,16 @@ exports.changePassword = async (req, res) => {
       user.password = newPassword;
       await user.save();
 
+      await sendEmail({
+        email: user.email,
+        subject: "Password Changed Notification",
+        username: user.username,
+        changeType: "password",
+        newValue: "********", // Password not shown for security reasons
+        profileLink: `http://yourapp.com/profile/${user._id}`,
+        supportLink: "http://yourapp.com/support",
+      });
+
       res.json({ message: "Password updated successfully" });
     } else {
       res.status(401).json({ message: "Incorrect old password" });
@@ -20,6 +31,7 @@ exports.changePassword = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Update email
 exports.updateUserEmail = async (req, res) => {
@@ -33,11 +45,14 @@ exports.updateUserEmail = async (req, res) => {
       await user.save();
 
       // Send notification email
-      const message = `Hi ${user.username}, your email has been updated successfully to ${newEmail}.`;
       await sendEmail({
         email: newEmail,
         subject: "Email Update Notification",
-        message,
+        username: user.username,
+        changeType: "email",
+        newValue: newEmail,
+        profileLink: `http://yourapp.com/profile/${user._id}`,
+        supportLink: "http://yourapp.com/support",
       });
 
       res.json({ message: "Email updated successfully" });
@@ -48,6 +63,7 @@ exports.updateUserEmail = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Update phone number
 exports.updateUserPhone = async (req, res) => {
@@ -60,6 +76,17 @@ exports.updateUserPhone = async (req, res) => {
       user.phoneNumber = newPhoneNumber;
       await user.save();
 
+      // Send email notification
+      await sendEmail({
+        email: user.email,
+        subject: "Phone Number Update Notification",
+        username: user.username,
+        changeType: "phone number",
+        newValue: newPhoneNumber,
+        profileLink: `http://yourapp.com/profile/${user._id}`,
+        supportLink: "http://yourapp.com/support",
+      });
+
       res.json({ message: "Phone number updated successfully" });
     } else {
       res.status(404).json({ message: "User not found" });
@@ -68,6 +95,7 @@ exports.updateUserPhone = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Upload profile image
 exports.uploadImage = async (req, res) => {
@@ -129,7 +157,8 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-//getUserProfile
+
+// Get user profile
 exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
@@ -142,7 +171,7 @@ exports.getUserProfile = async (req, res) => {
         email: user.email,
         phoneNumber: user.phoneNumber,
         imageUrl: user.imageUrl,
-        ratings: user.ratings, 
+        ratings: user.ratings,
       });
     } else {
       res.status(404).json({ message: "User not found" });
@@ -164,23 +193,36 @@ exports.updateMe = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    let changes = [];
+
     // Update username if provided
     if (username) {
       user.username = username;
+      changes.push(`username to ${username}`);
     }
 
     // Update email if provided
     if (newEmail) {
       user.email = newEmail;
+      changes.push(`email to ${newEmail}`);
     }
 
     // Update phone number if provided
     if (newPhoneNumber) {
       user.phoneNumber = newPhoneNumber;
+      changes.push(`phone number to ${newPhoneNumber}`);
     }
 
     await user.save();
-    // Return the updated user information
+
+    // Send email notification
+    const message = `Hi ${user.username}, your profile information has been updated successfully. Changes made: ${changes.join(", ")}.`;
+    await sendEmail({
+      email: user.email,
+      subject: "Profile Update Notification",
+      message,
+    });
+
     res.json({
       message: "User information updated successfully",
       user: user,
@@ -190,7 +232,7 @@ exports.updateMe = async (req, res) => {
   }
 };
 
-//deleteUser
+// Delete user
 exports.deleteUser = async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -207,7 +249,8 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-//deleteAllUsers
+
+// Delete all users
 exports.deleteAllUsers = async (req, res) => {
   try {
     // Get all users before deleting them
@@ -225,6 +268,3 @@ exports.deleteAllUsers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-
-
