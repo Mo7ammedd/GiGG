@@ -20,7 +20,7 @@ app.options ("*",cors());
 // Use the routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api", lyricsRoutes);
+app.use("/api", lyricsRoutes); // This makes the route available at /api/lyrics and /api/search
 
 app.use(errorHandler);
 
