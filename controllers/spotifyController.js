@@ -1,12 +1,13 @@
-const axios = require('axios');
+const axios = require("axios");
 
 const getSpotifyAccessToken = async () => {
   try {
-    const response = await axios.post('https://accounts.spotify.com/api/token', 
-      'grant_type=client_credentials',
+    const response = await axios.post(
+      "https://accounts.spotify.com/api/token",
+      "grant_type=client_credentials",
       {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded",
         },
         auth: {
           username: process.env.SPOTIFY_CLIENT_ID,
@@ -16,22 +17,22 @@ const getSpotifyAccessToken = async () => {
     );
     return response.data.access_token;
   } catch (error) {
-    console.error('Error getting Spotify access token:', error);
+    console.error("Error getting Spotify access token:", error);
     throw error;
   }
 };
 
 const getRandomSongs = async (accessToken, limit = 50) => {
   try {
-    const response = await axios.get('https://api.spotify.com/v1/search', {
+    const response = await axios.get("https://api.spotify.com/v1/search", {
       params: {
-        q: 'genre:pop', 
-        type: 'track',
+        q: "genre:pop",
+        type: "track",
         limit: limit,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
@@ -39,42 +40,48 @@ const getRandomSongs = async (accessToken, limit = 50) => {
     const shuffledTracks = tracks.sort(() => 0.5 - Math.random());
     const randomTracks = shuffledTracks.slice(0, limit);
 
-    return randomTracks.map(track => ({
+    return randomTracks.map((track) => ({
       song: track.name,
-      artist: track.artists.map(artist => artist.name).join(', '),
+      artist: track.artists.map((artist) => artist.name).join(", "),
       album: track.album.name,
       preview_url: track.preview_url,
-      album_image: track.album.images[0]?.url, 
+      album_image: track.album.images[0]?.url,
     }));
   } catch (error) {
-    console.error('Error fetching random songs:', error.response?.data || error.message);
+    console.error(
+      "Error fetching random songs:",
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
 
 const searchSongByName = async (accessToken, songName) => {
   try {
-    const response = await axios.get('https://api.spotify.com/v1/search', {
+    const response = await axios.get("https://api.spotify.com/v1/search", {
       params: {
         q: songName,
-        type: 'track',
+        type: "track",
         limit: 10,
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
-    return response.data.tracks.items.map(track => ({
+    return response.data.tracks.items.map((track) => ({
       song: track.name,
-      artist: track.artists.map(artist => artist.name).join(', '),
+      artist: track.artists.map((artist) => artist.name).join(", "),
       album: track.album.name,
       preview_url: track.preview_url,
       album_image: track.album.images[0]?.url,
     }));
   } catch (error) {
-    console.error('Error searching for song:', error.response?.data || error.message);
+    console.error(
+      "Error searching for song:",
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
@@ -88,11 +95,11 @@ const getRandomSongsHandler = async (req, res) => {
     if (songs.length > 0) {
       res.status(200).json(songs);
     } else {
-      res.status(404).json({ message: 'No songs found' });
+      res.status(404).json({ message: "No songs found" });
     }
   } catch (error) {
-    console.error('Error handling /random-songs request:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error handling /random-songs request:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -100,7 +107,9 @@ const searchSongByNameHandler = async (req, res) => {
   const { name } = req.query;
 
   if (!name) {
-    return res.status(400).json({ message: "Missing required parameter: name" });
+    return res
+      .status(400)
+      .json({ message: "Missing required parameter: name" });
   }
 
   try {
@@ -110,11 +119,11 @@ const searchSongByNameHandler = async (req, res) => {
     if (songs.length > 0) {
       res.status(200).json(songs);
     } else {
-      res.status(404).json({ message: 'No songs found' });
+      res.status(404).json({ message: "No songs found" });
     }
   } catch (error) {
-    console.error('Error handling /search-song request:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error handling /search-song request:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

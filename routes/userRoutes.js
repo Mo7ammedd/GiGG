@@ -9,7 +9,6 @@ const {
   updateMe,
   getUserProfile,
   deleteUser,
-  deleteAllUsers,
 } = require("../controllers/userController");
 const { protect } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/multerMiddleware");
@@ -24,5 +23,5 @@ router.post("/upload-img", protect, upload.single("image"), uploadImage);
 router.get("/all", protect, getAllUsers);
 router.get("/:id", protect, getUserById);
 router.delete("/delete/:id", protect, deleteUser);
-router.delete("/delete-all", protect, deleteAllUsers);
+
 module.exports = router;
