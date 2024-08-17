@@ -29,6 +29,9 @@ const UserSchema = new mongoose.Schema(
       },
       unique: true,
     },
+    name: {
+      type: String,
+    },
     password: {
       type: String,
       required: function () {
@@ -36,16 +39,11 @@ const UserSchema = new mongoose.Schema(
       },
     },
     phoneNumber: String,
-    imageUrl: String,
 
     googleId: {
       type: String,
       unique: true,
     },
-    firstName: String,
-    lastName: String,
-    displayName: String,
-    googleImageUrl: String,
 
     ratings: [RatingSchema],
   },

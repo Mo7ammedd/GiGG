@@ -24,22 +24,34 @@ module.exports = function () {
           if (user) {
             return done(null, user);
           } else {
-            // Ensure the username is not null and unique
-            const username = profile.displayName || profile.id;
+            // Combine firstName and lastName into name
+            const firstName = profile.name.givenName || ""; // Use 'givenName' if available
+            const lastName = profile.name.familyName || ""; // Use 'familyName' if available
+            const name = `${firstName} ${lastName}`.trim(); // Remove leading/trailing spaces
+
+            // Generate a base username using the name
+            let baseUsername = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+            // Check if the base username is already taken
+            let username = baseUsername;
+            let existingUser = await User.findOne({ username });
+            while (existingUser) {
+              // Append a random 4-digit number to the username
+              const randomUsername = Math.floor(1000 + Math.random() * 9000);
+              username = `${baseUsername}${randomUsername}`;
+              existingUser = await User.findOne({ username });
+            }
+
             user = new User({
               googleId: profile.id,
               displayName: profile.displayName,
-              firstName: profile.name.givenName,
-              lastName: profile.name.familyName,
-              email: email, // for email verification
-              username: username, // for username verification
-              googleImageUrl: profile.photos[0].value,
+              name: name, // Use the combined name field
+              email: email,
+              username: username, // Use the generated unique username
             });
 
             // Save the user
             user = await user.save();
-
-            await user.save();
             return done(null, user);
           }
         } catch (err) {
