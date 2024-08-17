@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require("axios");
 
 // Fetch Spotify access token
 const getSpotifyAccessToken = async () => {
