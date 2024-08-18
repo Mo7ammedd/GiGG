@@ -1,0 +1,50 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js Version
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'  
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'GiGG'
+          package: '.'
+
+      - name: Set Environment Variables
+        run: |
+          echo "MONGO_URI=mongodb+srv://medomostafa22255:B1EnmVzVdJvxi5ee@cluster0.nrsng.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" >> $GITHUB_ENV
+          echo "JWT_SECRET=a5c0c6cfe47e7f89480b17f4357c26a791373c474f007a90569c0b3a083e4b1f5b47c5a92067d76855e3a6e73a1c0e35ae9bbfb7e85b9423b8d239e1fee87eb6" >> $GITHUB_ENV
+          echo "GENIUS_APi=ETZO_mIl1KzGo-X0BuQKgKF_rDgqkYWMyjgirLAeQdwWBHiZM9Z8BxDhVF_aYjGS" >> $GITHUB_ENV
+          echo "PORT=3000" >> $GITHUB_ENV
+          echo "CLOUDINARY_CLOUD_NAME=dduok2xsd" >> $GITHUB_ENV
+          echo "CLOUDINARY_API_KEY=219483321131221" >> $GITHUB_ENV
+          echo "CLOUDINARY_API_SECRET=4-msf_1l_HV0gj554O3ANGaQrSk" >> $GITHUB_ENV
+          echo "EMAIL_USERNAME=medo.mostafa22255@icloud.com" >> $GITHUB_ENV
+          echo "EMAIL_PASSWORD=rxwe-rqym-hqlr-usbv" >> $GITHUB_ENV
+          echo "SPOTIFY_CLIENT_ID=2fd5f83cd8be41cfb0747630c10a37e0" >> $GITHUB_ENV
+          echo "SPOTIFY_CLIENT_SECRET=463bdc8966f04558b6980cb15b274529" >> $GITHUB_ENV
