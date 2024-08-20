@@ -31,6 +31,9 @@ const UserSchema = new mongoose.Schema(
     },
     name: {
       type: String,
+      required: function () {
+        return !this.googleId; // Require name if not using Google OAuth
+      },
     },
     password: {
       type: String,
