@@ -29,6 +29,12 @@ const UserSchema = new mongoose.Schema(
       },
       unique: true,
     },
+    name: {
+      type: String,
+      required: function () {
+        return !this.googleId; // Require name if not using Google OAuth
+      },
+    },
     password: {
       type: String,
       required: function () {
@@ -36,16 +42,11 @@ const UserSchema = new mongoose.Schema(
       },
     },
     phoneNumber: String,
-    imageUrl: String,
 
     googleId: {
       type: String,
       unique: true,
     },
-    firstName: String,
-    lastName: String,
-    displayName: String,
-    googleImageUrl: String,
 
     ratings: [RatingSchema],
   },
