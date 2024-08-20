@@ -5,7 +5,8 @@ const {
     getTopSongsInEgyptHandler, 
     spotifyLogin, 
     spotifyCallback, 
-    getRecentlyPlayedHandler 
+    getRecentlyPlayedHandler ,
+    getUserPlaylistsHandler
 } = require('../controllers/spotifyController');
 
 const router = express.Router();
@@ -14,7 +15,9 @@ router.get('/random-songs', getRandomSongsHandler);
 router.get('/search-song', searchSongByNameHandler);
 router.get('/top-songs-egypt', getTopSongsInEgyptHandler);
 
-//  OAuth routes
+
+router.get('/playlists', getUserPlaylistsHandler);
+
 router.get('/login', spotifyLogin);
 router.get('/callback', spotifyCallback);
 router.get('/recently-played', getRecentlyPlayedHandler);

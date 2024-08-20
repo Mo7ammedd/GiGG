@@ -111,6 +111,24 @@ const getRecentlyPlayed = async (accessToken) => {
   });
 };
 
+// Fetch user's playlists
+const getUserPlaylists = async (accessToken) => {
+  const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data.items.map(playlist => ({
+    name: playlist.name,
+    description: playlist.description,
+    tracks: playlist.tracks.total,
+    image: playlist.images[0]?.url,
+    external_url: playlist.external_urls.spotify,
+  }));
+};
+
 // Get Spotify access token using authorization code
 const getUserAccessToken = async (code) => {
   const response = await axios.post(
@@ -205,6 +223,21 @@ const getRecentlyPlayedHandler = async (req, res) => {
   }
 };
 
+const getUserPlaylistsHandler = async (req, res) => {
+  const accessToken = req.query.access_token;
+
+  if (!accessToken) {
+    return res.status(400).json({ message: 'Access token is required' });
+  }
+
+  try {
+    const playlists = await getUserPlaylists(accessToken);
+    res.status(playlists.length > 0 ? 200 : 404).json(playlists.length > 0 ? playlists : { message: 'No playlists found' });
+  } catch {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   spotifyLogin,
   spotifyCallback,
@@ -213,4 +246,5 @@ module.exports = {
   getRandomSongsHandler,
   searchSongByNameHandler,
   getTopSongsInEgyptHandler,
+  getUserPlaylistsHandler, 
 };
