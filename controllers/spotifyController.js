@@ -237,6 +237,36 @@ const getUserPlaylistsHandler = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+const getTaylorSwiftPlaylist = async (accessToken) => {
+  const response = await axios.get('https://api.spotify.com/v1/playlists/1hOpjvJ3AXxXny3oTa4uLN/tracks', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data.items.map(item => {
+    const track = item.track;
+    return {
+      song: track.name,
+      artist: track.artists.map(artist => artist.name).join(', '),
+      album: track.album.name,
+      preview_url: track.preview_url,
+      album_image: track.album.images[0]?.url,
+    };
+  });
+};
+
+const getTaylorSwiftPlaylistHandler = async (req, res) => {
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    const songs = await getTaylorSwiftPlaylist(accessToken);
+    res.status(songs.length > 0 ? 200 : 404).json(songs.length > 0 ? songs : { message: 'No songs found' });
+  } catch {
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 module.exports = {
   spotifyLogin,
@@ -247,4 +277,5 @@ module.exports = {
   searchSongByNameHandler,
   getTopSongsInEgyptHandler,
   getUserPlaylistsHandler, 
+  getTaylorSwiftPlaylistHandler
 };

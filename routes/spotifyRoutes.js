@@ -6,7 +6,8 @@ const {
     spotifyLogin, 
     spotifyCallback, 
     getRecentlyPlayedHandler ,
-    getUserPlaylistsHandler
+    getUserPlaylistsHandler,
+    getTaylorSwiftPlaylistHandler
 } = require('../controllers/spotifyController');
 
 const router = express.Router();
@@ -21,5 +22,6 @@ router.get('/playlists', getUserPlaylistsHandler);
 router.get('/login', spotifyLogin);
 router.get('/callback', spotifyCallback);
 router.get('/recently-played', getRecentlyPlayedHandler);
+router.get('/taylorswift', getTaylorSwiftPlaylistHandler);
 
 module.exports = router;
