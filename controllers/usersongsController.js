@@ -64,4 +64,5 @@ const addFavoriteSong = async (req, res) => {
 
 module.exports = {
     rateSong,
+    addFavoriteSong,
 };

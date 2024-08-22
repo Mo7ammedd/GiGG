@@ -2,39 +2,34 @@ const axios = require("axios");
 
 // Fetch Spotify access token
 const getSpotifyAccessToken = async () => {
-  try {
-    const response = await axios.post(
-      'https://accounts.spotify.com/api/token',
-      'grant_type=client_credentials',
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        auth: {
-          username: process.env.SPOTIFY_CLIENT_ID,
-          password: process.env.SPOTIFY_CLIENT_SECRET,
-        },
-      }
-    );
-    return response.data.access_token;
-  } catch (error) {
-    console.error('Error fetching Spotify access token:', error.response ? error.response.data : error.message);
-    throw error; // Re-throw the error for higher-level handling
-  }
+  const response = await axios.post(
+    "https://accounts.spotify.com/api/token",
+    "grant_type=client_credentials",
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      auth: {
+        username: process.env.SPOTIFY_CLIENT_ID,
+        password: process.env.SPOTIFY_CLIENT_SECRET,
+      },
+    }
+  );
+  return response.data.access_token;
 };
 
 
 // Fetch random songs
 const getRandomSongs = async (accessToken, limit = 50) => {
-  const response = await axios.get('https://api.spotify.com/v1/search', {
+  const response = await axios.get("https://api.spotify.com/v1/search", {
     params: {
-      q: 'genre:pop',
-      type: 'track',
+      q: "genre:pop",
+      type: "track",
       limit: limit,
     },
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
 
@@ -42,9 +37,9 @@ const getRandomSongs = async (accessToken, limit = 50) => {
   const shuffledTracks = tracks.sort(() => 0.5 - Math.random());
   const randomTracks = shuffledTracks.slice(0, limit);
 
-  return randomTracks.map(track => ({
+  return randomTracks.map((track) => ({
     song: track.name,
-    artist: track.artists.map(artist => artist.name).join(', '),
+    artist: track.artists.map((artist) => artist.name).join(", "),
     album: track.album.name,
     preview_url: track.preview_url,
     album_image: track.album.images[0]?.url,
@@ -53,21 +48,21 @@ const getRandomSongs = async (accessToken, limit = 50) => {
 
 // Search for songs by name
 const searchSongByName = async (accessToken, songName) => {
-  const response = await axios.get('https://api.spotify.com/v1/search', {
+  const response = await axios.get("https://api.spotify.com/v1/search", {
     params: {
       q: songName,
-      type: 'track',
+      type: "track",
       limit: 10,
     },
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
 
-  return response.data.tracks.items.map(track => ({
+  return response.data.tracks.items.map((track) => ({
     song: track.name,
-    artist: track.artists.map(artist => artist.name).join(', '),
+    artist: track.artists.map((artist) => artist.name).join(", "),
     album: track.album.name,
     preview_url: track.preview_url,
     album_image: track.album.images[0]?.url,
@@ -76,18 +71,110 @@ const searchSongByName = async (accessToken, songName) => {
 
 // Fetch top songs in Egypt
 const getTopSongsInEgypt = async (accessToken) => {
-  const response = await axios.get('https://api.spotify.com/v1/playlists/37i9dQZEVXbLn7RQmT5Xv2/tracks', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  });
+  const response = await axios.get(
+    "https://api.spotify.com/v1/playlists/37i9dQZEVXbLn7RQmT5Xv2/tracks",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
-  return response.data.items.map(item => {
+  return response.data.items.map((item) => {
     const track = item.track;
     return {
       song: track.name,
-      artist: track.artists.map(artist => artist.name).join(', '),
+      artist: track.artists.map((artist) => artist.name).join(", "),
+      album: track.album.name,
+      preview_url: track.preview_url,
+      album_image: track.album.images[0]?.url,
+    };
+  });
+};
+//getTrendSongsInEgypt
+const getTrendSongsInEgypt = async (accessToken) => {
+  const response = await axios.get(
+    "https://api.spotify.com/v1/playlists/37i9dQZF1DXaGui85Swluy/tracks",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  return response.data.items.map((item) => {
+    const track = item.track;
+    return {
+      song: track.name,
+      artist: track.artists.map((artist) => artist.name).join(", "),
+      album: track.album.name,
+      preview_url: track.preview_url,
+      album_image: track.album.images[0]?.url,
+    };
+  });
+};
+
+const getTopMahraganat = async (accessToken) => {
+  const response = await axios.get(
+    "https://api.spotify.com/v1/playlists/37i9dQZF1DX4qF0846GNk8/tracks",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.data.items.map((item) => {
+    const track = item.track;
+    return {
+      song: track.name,
+      artist: track.artists.map((artist) => artist.name).join(", "),
+      album: track.album.name,
+      preview_url: track.preview_url,
+      album_image: track.album.images[0]?.url,
+    };
+  });
+};
+
+const getMixComfySongs = async (accessToken) => {
+  const response = await axios.get(
+    "https://api.spotify.com/v1/playlists/37i9dQZF1DXdcjKKBPqh1t/tracks",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.data.items.map((item) => {
+    const track = item.track;
+    return {
+      song: track.name,
+      artist: track.artists.map((artist) => artist.name).join(", "),
+      album: track.album.name,
+      preview_url: track.preview_url,
+      album_image: track.album.images[0]?.url,
+    };
+  });
+};
+
+const getStudyAndRelaxing = async (accessToken) => {
+  const response = await axios.get(
+    "https://api.spotify.com/v1/playlists/37i9dQZF1DXasUrKjiCTSW/tracks",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.data.items.map((item) => {
+    const track = item.track;
+    return {
+      song: track.name,
+      artist: track.artists.map((artist) => artist.name).join(", "),
       album: track.album.name,
       preview_url: track.preview_url,
       album_image: track.album.images[0]?.url,
@@ -97,19 +184,22 @@ const getTopSongsInEgypt = async (accessToken) => {
 
 // Fetch recently played tracks
 const getRecentlyPlayed = async (accessToken) => {
-  const response = await axios.get('https://api.spotify.com/v1/me/player/recently-played', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-    timeout: 10000, 
-  });
+  const response = await axios.get(
+    "https://api.spotify.com/v1/me/player/recently-played",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      timeout: 10000,
+    }
+  );
 
-  return response.data.items.map(item => {
+  return response.data.items.map((item) => {
     const track = item.track;
     return {
       song: track.name,
-      artist: track.artists.map(artist => artist.name).join(', '),
+      artist: track.artists.map((artist) => artist.name).join(", "),
       album: track.album.name,
       played_at: item.played_at,
       album_image: track.album.images[0]?.url,
@@ -119,14 +209,14 @@ const getRecentlyPlayed = async (accessToken) => {
 
 // Fetch user's playlists
 const getUserPlaylists = async (accessToken) => {
-  const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
+  const response = await axios.get("https://api.spotify.com/v1/me/playlists", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
 
-  return response.data.items.map(playlist => ({
+  return response.data.items.map((playlist) => ({
     name: playlist.name,
     description: playlist.description,
     tracks: playlist.tracks.total,
@@ -138,9 +228,9 @@ const getUserPlaylists = async (accessToken) => {
 // Get Spotify access token using authorization code
 const getUserAccessToken = async (code) => {
   const response = await axios.post(
-    'https://accounts.spotify.com/api/token',
+    "https://accounts.spotify.com/api/token",
     new URLSearchParams({
-      grant_type: 'authorization_code',
+      grant_type: "authorization_code",
       code: code,
       redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
       client_id: process.env.SPOTIFY_CLIENT_ID,
@@ -148,7 +238,7 @@ const getUserAccessToken = async (code) => {
     }),
     {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        "Content-Type": "application/x-www-form-urlencoded",
       },
     }
   );
@@ -164,22 +254,29 @@ const getRandomSongsHandler = async (req, res) => {
   try {
     const accessToken = await getSpotifyAccessToken();
     const songs = await getRandomSongs(accessToken, 50);
-    res.status(songs.length > 0 ? 200 : 404).json(songs.length > 0 ? songs : { message: 'No songs found' });
+    res
+      .status(songs.length > 0 ? 200 : 404)
+      .json(songs.length > 0 ? songs : { message: "No songs found" });
   } catch {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const searchSongByNameHandler = async (req, res) => {
   const { name } = req.query;
-  if (!name) return res.status(400).json({ message: 'Missing required parameter: name' });
+  if (!name)
+    return res
+      .status(400)
+      .json({ message: "Missing required parameter: name" });
 
   try {
     const accessToken = await getSpotifyAccessToken();
     const songs = await searchSongByName(accessToken, name);
-    res.status(songs.length > 0 ? 200 : 404).json(songs.length > 0 ? songs : { message: 'No songs found' });
+    res
+      .status(songs.length > 0 ? 200 : 404)
+      .json(songs.length > 0 ? songs : { message: "No songs found" });
   } catch {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -187,16 +284,64 @@ const getTopSongsInEgyptHandler = async (req, res) => {
   try {
     const accessToken = await getSpotifyAccessToken();
     const songs = await getTopSongsInEgypt(accessToken);
-    res.status(songs.length > 0 ? 200 : 404).json(songs.length > 0 ? songs : { message: 'No songs found' });
+    res
+      .status(songs.length > 0 ? 200 : 404)
+      .json(songs.length > 0 ? songs : { message: "No songs found" });
   } catch {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getTrendSongsInEgyptHandler = async (req, res) => {
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    const songs = await getTrendSongsInEgypt(accessToken);
+    res
+      .status(songs.length > 0 ? 200 : 404)
+      .json(songs.length > 0 ? songs : { message: "No songs found" });
+  } catch {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+const getTopMahraganatHandler = async (req, res) => {
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    const songs = await getTopMahraganat(accessToken);
+    res
+      .status(songs.length > 0 ? 200 : 404)
+      .json(songs.length > 0 ? songs : { message: "No songs found" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getMixComfySongsHandler = async (req, res) => {
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    const songs = await getMixComfySongs(accessToken);
+    res
+      .status(songs.length > 0 ? 200 : 404)
+      .json(songs.length > 0 ? songs : { message: "No songs found" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+const getStudyAndRelaxingSongsHandler = async (req, res) => {
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    const songs = await getStudyAndRelaxing(accessToken);
+    res
+      .status(songs.length > 0 ? 200 : 404)
+      .json(songs.length > 0 ? songs : { message: "No songs found" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const spotifyLogin = (req, res) => {
-  const scope = 'user-read-recently-played';
+  const scope = "user-read-recently-played";
   const params = new URLSearchParams({
-    response_type: 'code',
+    response_type: "code",
     client_id: process.env.SPOTIFY_CLIENT_ID,
     scope: scope,
     redirect_uri: process.env.SPOTIFY_REDIRECT_URI,
@@ -212,20 +357,27 @@ const spotifyCallback = async (req, res) => {
     const { access_token } = await getUserAccessToken(code);
     res.redirect(`/recently-played?access_token=${access_token}`);
   } catch {
-    res.redirect('/login');
+    res.redirect("/login");
   }
 };
 
 const getRecentlyPlayedHandler = async (req, res) => {
   const accessToken = req.query.access_token;
 
-  if (!accessToken) return res.status(400).json({ message: 'Access token is required' });
+  if (!accessToken)
+    return res.status(400).json({ message: "Access token is required" });
 
   try {
     const recentlyPlayed = await getRecentlyPlayed(accessToken);
-    res.status(recentlyPlayed.length > 0 ? 200 : 404).json(recentlyPlayed.length > 0 ? recentlyPlayed : { message: 'No recently played tracks found' });
+    res
+      .status(recentlyPlayed.length > 0 ? 200 : 404)
+      .json(
+        recentlyPlayed.length > 0
+          ? recentlyPlayed
+          : { message: "No recently played tracks found" }
+      );
   } catch {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -233,29 +385,36 @@ const getUserPlaylistsHandler = async (req, res) => {
   const accessToken = req.query.access_token;
 
   if (!accessToken) {
-    return res.status(400).json({ message: 'Access token is required' });
+    return res.status(400).json({ message: "Access token is required" });
   }
 
   try {
     const playlists = await getUserPlaylists(accessToken);
-    res.status(playlists.length > 0 ? 200 : 404).json(playlists.length > 0 ? playlists : { message: 'No playlists found' });
+    res
+      .status(playlists.length > 0 ? 200 : 404)
+      .json(
+        playlists.length > 0 ? playlists : { message: "No playlists found" }
+      );
   } catch {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 const getTaylorSwiftPlaylist = async (accessToken) => {
-  const response = await axios.get('https://api.spotify.com/v1/playlists/1hOpjvJ3AXxXny3oTa4uLN/tracks', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  });
+  const response = await axios.get(
+    "https://api.spotify.com/v1/playlists/1hOpjvJ3AXxXny3oTa4uLN/tracks",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
-  return response.data.items.map(item => {
+  return response.data.items.map((item) => {
     const track = item.track;
     return {
       song: track.name,
-      artist: track.artists.map(artist => artist.name).join(', '),
+      artist: track.artists.map((artist) => artist.name).join(", "),
       album: track.album.name,
       preview_url: track.preview_url,
       album_image: track.album.images[0]?.url,
@@ -267,46 +426,13 @@ const getTaylorSwiftPlaylistHandler = async (req, res) => {
   try {
     const accessToken = await getSpotifyAccessToken();
     const songs = await getTaylorSwiftPlaylist(accessToken);
-    res.status(songs.length > 0 ? 200 : 404).json(songs.length > 0 ? songs : { message: 'No songs found' });
+    res
+      .status(songs.length > 0 ? 200 : 404)
+      .json(songs.length > 0 ? songs : { message: "No songs found" });
   } catch {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
-
-// Fetch top artists
-const getPopularArtists = async (accessToken) => {
-  const response = await axios.get('https://api.spotify.com/v1/search', {
-    params: {
-      q: 'genre:pop',
-      type: 'artist',
-      limit: 10,
-    },
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  return response.data.artists.items.map(artist => ({
-    name: artist.name,
-    genres: artist.genres,
-    followers: artist.followers.total,
-    image: artist.images[0]?.url,
-    external_url: artist.external_urls.spotify,
-  }));
-};
-
-const getPopularArtistsHandler = async (req, res) => {
-  try {
-    const accessToken = await getSpotifyAccessToken();
-    const artists = await getPopularArtists(accessToken);
-    res.status(artists.length > 0 ? 200 : 404).json(artists.length > 0 ? artists : { message: 'No artists found' });
-  } catch (error) {
-    console.error('Error fetching popular artists:', error.message || error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
-
 
 module.exports = {
   spotifyLogin,
@@ -316,7 +442,10 @@ module.exports = {
   getRandomSongsHandler,
   searchSongByNameHandler,
   getTopSongsInEgyptHandler,
+  getTrendSongsInEgyptHandler,
+  getTopMahraganatHandler,
+  getMixComfySongsHandler,
+  getStudyAndRelaxingSongsHandler,
   getUserPlaylistsHandler,
   getTaylorSwiftPlaylistHandler,
-  getPopularArtistsHandler
 };
