@@ -1,5 +1,10 @@
 const express = require("express");
-const { registerUser, loginUser } = require("../controllers/authController");
+const {
+  registerUser,
+  loginUser,
+  verifyOTP,
+  resendOTP,
+} = require("../controllers/authController");
 
 const passport = require("passport");
 const router = express.Router();
@@ -7,6 +12,12 @@ const router = express.Router();
 router.post("/register", registerUser);
 
 router.post("/login", loginUser);
+
+// Verify OTP
+router.post("/verifyOTP", verifyOTP);
+
+// Resend OTP
+router.post("/resendOTP", resendOTP);
 
 // Google OAuth login route
 router.get(
