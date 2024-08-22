@@ -2,21 +2,27 @@ const axios = require("axios");
 
 // Fetch Spotify access token
 const getSpotifyAccessToken = async () => {
-  const response = await axios.post(
-    'https://accounts.spotify.com/api/token',
-    'grant_type=client_credentials',
-    {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      auth: {
-        username: process.env.SPOTIFY_CLIENT_ID,
-        password: process.env.SPOTIFY_CLIENT_SECRET,
-      },
-    }
-  );
-  return response.data.access_token;
+  try {
+    const response = await axios.post(
+      'https://accounts.spotify.com/api/token',
+      'grant_type=client_credentials',
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        auth: {
+          username: process.env.SPOTIFY_CLIENT_ID,
+          password: process.env.SPOTIFY_CLIENT_SECRET,
+        },
+      }
+    );
+    return response.data.access_token;
+  } catch (error) {
+    console.error('Error fetching Spotify access token:', error.response ? error.response.data : error.message);
+    throw error; // Re-throw the error for higher-level handling
+  }
 };
+
 
 // Fetch random songs
 const getRandomSongs = async (accessToken, limit = 50) => {
@@ -267,6 +273,40 @@ const getTaylorSwiftPlaylistHandler = async (req, res) => {
   }
 };
 
+// Fetch top artists
+const getPopularArtists = async (accessToken) => {
+  const response = await axios.get('https://api.spotify.com/v1/search', {
+    params: {
+      q: 'genre:pop',
+      type: 'artist',
+      limit: 10,
+    },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response.data.artists.items.map(artist => ({
+    name: artist.name,
+    genres: artist.genres,
+    followers: artist.followers.total,
+    image: artist.images[0]?.url,
+    external_url: artist.external_urls.spotify,
+  }));
+};
+
+const getPopularArtistsHandler = async (req, res) => {
+  try {
+    const accessToken = await getSpotifyAccessToken();
+    const artists = await getPopularArtists(accessToken);
+    res.status(artists.length > 0 ? 200 : 404).json(artists.length > 0 ? artists : { message: 'No artists found' });
+  } catch (error) {
+    console.error('Error fetching popular artists:', error.message || error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 module.exports = {
   spotifyLogin,
@@ -276,6 +316,7 @@ module.exports = {
   getRandomSongsHandler,
   searchSongByNameHandler,
   getTopSongsInEgyptHandler,
-  getUserPlaylistsHandler, 
-  getTaylorSwiftPlaylistHandler
+  getUserPlaylistsHandler,
+  getTaylorSwiftPlaylistHandler,
+  getPopularArtistsHandler
 };
