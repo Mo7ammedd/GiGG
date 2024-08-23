@@ -13,6 +13,13 @@ const RatingSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const UserOTPSchema = new mongoose.Schema({
+  userId: String,
+  otp: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+  expiresAt: { type: Date, required: true },
+});
+
 const UserSchema = new mongoose.Schema(
   {
     username: {
@@ -66,4 +73,7 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = {
+  User: mongoose.model("User", UserSchema),
+  UserOTP: mongoose.model("UserOTP", UserOTPSchema),
+};
