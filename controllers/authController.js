@@ -149,7 +149,6 @@ exports.resendOTP = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
