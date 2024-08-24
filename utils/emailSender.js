@@ -9,7 +9,7 @@ const replacePlaceholders = (template, replacements) => {
   let html = template;
   for (const key in replacements) {
     const placeholder = `{{${key}}}`;
-    html = html.replace(new RegExp(placeholder, 'g'), replacements[key]);
+    html = html.replace(new RegExp(placeholder, "g"), replacements[key]);
   }
   return html;
 };
@@ -19,11 +19,11 @@ const sendEmail = async (options) => {
   const template = await readFile(templatePath, "utf-8");
 
   const htmlContent = replacePlaceholders(template, {
-    username: options.username || 'User',
-    changeType: options.changeType || 'information',
-    newValue: options.newValue || '',
-    profileLink: options.profileLink || '#',
-    supportLink: options.supportLink || '#',
+    username: options.username || "User",
+    changeType: options.changeType || "information",
+    newValue: options.newValue || "",
+    profileLink: options.profileLink || "#",
+    supportLink: options.supportLink || "#",
   });
 
   const transporter = nodemailer.createTransport({
@@ -43,7 +43,7 @@ const sendEmail = async (options) => {
     from: "medo.mostafa22255@icloud.com",
     to: options.email,
     subject: options.subject,
-    html: htmlContent, 
+    html: htmlContent,
   };
 
   await transporter.sendMail(mailOptions);

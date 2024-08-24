@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const { User, UserOTP } = require("../models/User");
 const cloudinary = require("../utils/upload");
 const sendEmail = require("../utils/emailSender");
 // Change password
