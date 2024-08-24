@@ -115,6 +115,7 @@ exports.verifyOTP = async (req, res) => {
 };
 
 // Resend OTP
+
 exports.resendOTP = async (req, res) => {
   const { userId } = req.body;
   try {
