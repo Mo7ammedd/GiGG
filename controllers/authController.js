@@ -115,6 +115,7 @@ exports.verifyOTP = async (req, res) => {
 };
 
 // Resend OTP
+
 exports.resendOTP = async (req, res) => {
   const { userId } = req.body;
   try {
@@ -148,10 +149,9 @@ exports.resendOTP = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+// Login
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email });
 
