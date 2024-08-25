@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js Version
         uses: actions/setup-node@v2
         with:
-          node-version: '18'  
+          node-version: "18"
 
       - name: Install Dependencies
         run: npm install
@@ -32,8 +32,8 @@ jobs:
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'GiGG'
-          package: '.'
+          app-name: "GiGG"
+          package: "."
 
       - name: Set Environment Variables
         run: |
