@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
     await sendEmail({
       email: user.email,
       subject: "Welcome to GIGG!",
-      type: "emailUpdate", // Ensure this matches the template name
+      type: "emailUpdate",
       username: user.username,
       profileLink: `http://yourapp.com/profile/${user._id}`,
       supportLink: "http://yourapp.com/support",
@@ -127,8 +127,8 @@ exports.resendOTP = async (req, res) => {
     const recentOTP = await UserOTP.findOne({ userId }).sort({ createdAt: -1 });
     if (recentOTP && Date.now() - recentOTP.createdAt < 60000) {
       return res.status(400).json({
-        success: "FAILED",
-        message: "Please wait a minute before requesting a new OTP.",
+        success: "خخخخخخخخخخخخخخخخ",
+        message: "استني يا علق دقيقه",
       });
     }
 

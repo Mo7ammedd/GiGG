@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const { User } = require("../models/User");
 
 const rateSong = async (req, res) => {
   const { song, artist, album, rating, album_image, preview_url } = req.body;
