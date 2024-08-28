@@ -1,80 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-        }
-        .header {
-            text-align: center;
-            padding-bottom: 20px;
-        }
-        .logo {
-            width: 100px;
-            height: auto;
-        }
-        h1 {
-            font-size: 24px;
-            color: #343a40;
-            margin-bottom: 16px;
-        }
-        p {
-            font-size: 16px;
-            color: #495057;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-        .footer {
-            font-size: 14px;
-            color: #6c757d;
-            text-align: center;
-            margin-top: 24px;
-            border-top: 1px solid #dee2e6;
-            padding-top: 12px;
-        }
-        .button {
-            display: inline-block;
-            padding: 12px 20px;
-            font-size: 16px;
-            color: #ffffff;
-            background-color: #28a745;
-            text-decoration: none;
-            border-radius: 6px;
-            margin-top: 20px;
-            text-align: center;
-        }
-        .button:hover {
-            background-color: #218838;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+      }
+      .header {
+        text-align: center;
+        padding-bottom: 20px;
+      }
+      .logo {
+        width: 100px;
+        height: auto;
+      }
+      h1 {
+        font-size: 24px;
+        color: #343a40;
+        margin-bottom: 16px;
+      }
+      p {
+        font-size: 16px;
+        color: #495057;
+        line-height: 1.6;
+        margin-bottom: 16px;
+      }
+      .footer {
+        font-size: 14px;
+        color: #6c757d;
+        text-align: center;
+        margin-top: 24px;
+        border-top: 1px solid #dee2e6;
+        padding-top: 12px;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 20px;
+        font-size: 16px;
+        color: #ffffff;
+        background-color: #28a745;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-top: 20px;
+        text-align: center;
+      }
+      .button:hover {
+        background-color: #218838;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <img src="https://i.ibb.co/YNrD0KH/LOGO-FINAL.png" alt="GIGG Logo" class="logo">
-            <h1>GIGG</h1>
-        </div>
-        <h1>Hello {{username}},</h1>
-        <p>Welcome to GIGG! Your account has been created successfully.</p>
-        <a href="{{profileLink}}" class="button">View Your Profile</a>
-        <div class="footer">
-            <p>If you have any questions, please <a href="{{supportLink}}">contact support</a>.</p>
-        </div>
+      <div class="header">
+        <img
+          src="https://i.ibb.co/YNrD0KH/LOGO-FINAL.png"
+          alt="GIGG Logo"
+          class="logo"
+        />
+        <h1>GIGG</h1>
+      </div>
+      <h1>Hello {{username}},</h1>
+      <p>Welcome to GIGG! Your account has been created successfully.</p>
+      <a href="{{profileLink}}" class="button">View Your Profile</a>
+      <div class="footer">
+        <p>
+          If you have any questions, please
+          <a href="{{supportLink}}">contact support</a>.
+        </p>
+      </div>
     </div>
-</body>
+  </body>
 </html>

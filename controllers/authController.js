@@ -8,7 +8,6 @@ exports.registerUser = async (req, res) => {
 
   try {
     const userExists = await User.findOne({ email });
-
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -18,18 +17,17 @@ exports.registerUser = async (req, res) => {
     await sendEmail({
       email: user.email,
       subject: "Welcome to GIGG!",
+      type: "emailUpdate",
       username: user.username,
-      name: user.name,
-      changeType: "welcome",
-      newValue: "",
       profileLink: `http://yourapp.com/profile/${user._id}`,
       supportLink: "http://yourapp.com/support",
     });
 
+    // Send OTP verification email
     const otpResult = await sendOTPVerificationEmail({
       email: user.email,
       username: user.username,
-      _id: user._id,
+      userId: user._id,
     });
 
     res.status(201).json({
@@ -49,10 +47,11 @@ const sendOTPVerificationEmail = async ({ email, username, userId }) => {
   try {
     const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
 
+    // Send OTP email
     await sendEmail({
       email,
       subject: "OTP Verification",
-      templateType: "emailVerification",
+      type: "emailVerification",
       username,
       otp,
     });
@@ -71,7 +70,10 @@ const sendOTPVerificationEmail = async ({ email, username, userId }) => {
       message: "OTP sent successfully",
     };
   } catch (error) {
-    console.error("Error sending OTP verification email:", error);
+    return {
+      success: "FAILED",
+      message: "Failed to send OTP",
+    };
   }
 };
 
@@ -84,9 +86,8 @@ exports.verifyOTP = async (req, res) => {
     }
 
     const userOTP = await UserOTP.findOne({ userId });
-
     if (!userOTP) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "OTP not found for user" });
     }
 
     if (Date.now() > userOTP.expiresAt) {
@@ -94,13 +95,11 @@ exports.verifyOTP = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(otp, userOTP.otp);
-
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
     const user = await User.findById(userId);
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -109,12 +108,9 @@ exports.verifyOTP = async (req, res) => {
     await user.save();
     res.status(200).json({ message: "OTP verified successfully" });
   } catch (error) {
-    console.error("Error verifying OTP:", error);
     res.status(500).json({ message: error.message });
   }
 };
-
-// Resend OTP
 
 exports.resendOTP = async (req, res) => {
   const { userId } = req.body;
@@ -124,13 +120,12 @@ exports.resendOTP = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Find the most recent OTP record for the user
+    // Check if recent OTP exists
     const recentOTP = await UserOTP.findOne({ userId }).sort({ createdAt: -1 });
-
     if (recentOTP && Date.now() - recentOTP.createdAt < 60000) {
       return res.status(400).json({
-        success: "خخخخخخخخ",
-        message: "اصبر يا علق دقيقه بعدين اعمل ريسيند",
+        success: "خخخخخخخخخخخخخخخخ",
+        message: "استني يا علق دقيقه",
       });
     }
 
@@ -144,16 +139,16 @@ exports.resendOTP = async (req, res) => {
       userId,
     });
 
-    res.status(200).json(otpResult); // Directly return the otpResult object
+    res.status(200).json(otpResult);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await User.findOne({ email });
-
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({
         _id: user._id,

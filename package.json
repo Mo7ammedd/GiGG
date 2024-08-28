@@ -10,13 +10,13 @@
     "build": "echo 'Add your build steps here'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [ ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.7.3",
     "back-end": "file:",
-    "bcryptjs": "^2.4.3",
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cloudinary": "^2.4.0",
     "cors": "^2.8.5",
