@@ -6,9 +6,7 @@ const router = express.Router();
 
 router.post("/rate-song", protect, rateSong);
 
-router.post("/favorite-song", protect, addFavoriteSong);
 
-router.get("/favorites", protect, getFavoriteSongs);
 
 router.get("/playlists", protect, getUserPlaylistsHandler);
 

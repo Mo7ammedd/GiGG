@@ -38,6 +38,7 @@ const getRandomSongs = async (accessToken, limit = 50) => {
   const randomTracks = shuffledTracks.slice(0, limit);
 
   return randomTracks.map((track) => ({
+    id: track.id,
     song: track.name,
     artist: track.artists.map((artist) => artist.name).join(", "),
     album: track.album.name,
@@ -61,6 +62,7 @@ const searchSongByName = async (accessToken, songName) => {
   });
 
   return response.data.tracks.items.map((track) => ({
+    id: track.id,
     song: track.name,
     artist: track.artists.map((artist) => artist.name).join(", "),
     album: track.album.name,
@@ -84,6 +86,7 @@ const getTopSongsInEgypt = async (accessToken) => {
   return response.data.items.map((item) => {
     const track = item.track;
     return {
+      id: track.id,
       song: track.name,
       artist: track.artists.map((artist) => artist.name).join(", "),
       album: track.album.name,
